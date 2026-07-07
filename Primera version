@@ -11,6 +11,7 @@ def mostrar_menu():
     print("7. Salir")
     print("="*40)
 
+
 def registrar_usuario(usuarios):
     try:
         id_usuario = int(input("Ingrese el DNI o ID del usuario: "))
@@ -23,6 +24,7 @@ def registrar_usuario(usuarios):
     except ValueError:
         print("[!] Error: El ID debe ser un número entero.")
 
+
 def registrar_libro(libros):
     try:
         id_libro = int(input("Ingrese el código único del libro: "))
@@ -31,13 +33,14 @@ def registrar_libro(libros):
         else:
             titulo = input("Ingrese el título del libro: ")
             libros[id_libro] = {
-                "titulo": titulo, 
-                "disponible": True, 
+                "titulo": titulo,
+                "disponible": True,
                 "veces_prestado": 0
             }
             print(f"[✓] Libro '{titulo}' registrado con éxito.")
     except ValueError:
         print("[!] Error: El código del libro debe ser numérico.")
+
 
 def pedir_prestado_un_libro(libros, usuarios, estadisticas):
     try:
@@ -73,6 +76,7 @@ def pedir_prestado_un_libro(libros, usuarios, estadisticas):
     except ValueError:
         print("[!] Error: Ingrese datos numéricos válidos para los IDs.")
 
+
 def devolver_libro(libros, usuarios, estadisticas):
     try:
         id_usuario = int(input("Ingrese el ID del usuario que devuelve: "))
@@ -81,7 +85,7 @@ def devolver_libro(libros, usuarios, estadisticas):
             return
 
         id_libro = int(input("Ingrese el código del libro a devolver: "))
-        
+
         if id_libro in usuarios[id_usuario]["libros_actuales"]:
             dias_retraso = int(input("¿Cuántos días de retraso tiene la devolución? (0 si está a tiempo): "))
             if dias_retraso < 0:
@@ -94,12 +98,13 @@ def devolver_libro(libros, usuarios, estadisticas):
                 estadisticas["recaudacion_multas"] += multa
                 print(f"[!] Se aplicó una multa de ${multa} por {dias_retraso} días de retraso.")
             usuarios[id_usuario]["libros_actuales"].remove(id_libro)
-            libros[id_libro]["disponible"] = True           
+            libros[id_libro]["disponible"] = True
             print(f"[✓] Libro devuelto correctamente.")
         else:
-            print("[!] Error: El usuario no tiene ese libro en préstamo.")           
+            print("[!] Error: El usuario no tiene ese libro en préstamo.")
     except ValueError:
         print("[!] Error: Entrada inválida. Use números enteros.")
+
 
 def mostrar_libros_disponibles(libros):
     print("\n--- LIBROS DISPONIBLES ---")
@@ -116,11 +121,12 @@ def mostrar_libros_disponibles(libros):
 
     return contador_disponibles
 
+
 def mostrar_estadisticas(libros, estadisticas):
     print("\n--- ESTADÍSTICAS DEL SISTEMA ---")
     print(f"Cantidad total de préstamos realizados: {estadisticas['total_prestamos']}")
     print(f"Recaudación total por multas: ${estadisticas['recaudacion_multas']}")
-    
+
     print("\nLibros y su cantidad de solicitudes:")
     hay_libros = False
     for id_libro, datos in libros.items():
@@ -129,20 +135,84 @@ def mostrar_estadisticas(libros, estadisticas):
         print(f" - {datos['titulo']}: Prestado {datos['veces_prestado']} veces ({estado})")
     if not hay_libros:
         print(" No hay libros registrados en el sistema aún.")
+
+
+# ------------------ MANEJO DE ARCHIVOS TXT ------------------
+
+
+def guardar_archivos(usuarios, libros, estadisticas):
+    # Guardar usuarios
+    with open("usuarios.txt", "w") as f:
+        for id_u, datos in usuarios.items():
+            linea = f"{id_u},{datos['nombre']},{'|'.join(map(str, datos['libros_actuales']))}\n"
+            f.write(linea)
+
+    # Guardar libros
+    with open("libros.txt", "w") as f:
+        for id_l, datos in libros.items():
+            linea = f"{id_l},{datos['titulo']},{datos['disponible']},{datos['veces_prestado']}\n"
+            f.write(linea)
+
+    # Guardar estadísticas
+    with open("estadisticas.txt", "w") as f:
+        f.write(f"{estadisticas['total_prestamos']},{estadisticas['recaudacion_multas']}\n")
+
+
+def cargar_archivos():
+    usuarios = {}
+    libros = {}
+    estadisticas = {"total_prestamos": 0, "recaudacion_multas": 0.0}
+
+    # Cargar usuarios
+    try:
+        with open("usuarios.txt", "r") as f:
+            for linea in f:
+                partes = linea.strip().split(",")
+                id_u = int(partes[0])
+                nombre = partes[1]
+                libros_actuales = partes[2].split("|") if partes[2] != "" else []
+                libros_actuales = list(map(int, libros_actuales)) if libros_actuales else []
+                usuarios[id_u] = {"nombre": nombre, "libros_actuales": libros_actuales}
+    except FileNotFoundError:
+        pass
+
+    # Cargar libros
+    try:
+        with open("libros.txt", "r") as f:
+            for linea in f:
+                partes = linea.strip().split(",")
+                id_l = int(partes[0])
+                titulo = partes[1]
+                disponible = partes[2] == "True"
+                veces = int(partes[3])
+                libros[id_l] = {"titulo": titulo, "disponible": disponible, "veces_prestado": veces}
+    except FileNotFoundError:
+        pass
+
+    # Cargar estadísticas
+    try:
+        with open("estadisticas.txt", "r") as f:
+            partes = f.readline().strip().split(",")
+            estadisticas["total_prestamos"] = int(partes[0])
+            estadisticas["recaudacion_multas"] = float(partes[1])
+    except FileNotFoundError:
+        pass
+
+    return usuarios, libros, estadisticas
+
+
 def main():
-    usuarios_db = {}
-    libros_db = {}
-    estadisticas_globales = {
-        "total_prestamos": 0,
-        "recaudacion_multas": 0.0
-    }
-    libros_db[101] = {"titulo": "La vida despues de la muerte", "disponible": True, "veces_prestado": 0}
-    libros_db[102] = {"titulo": "El Eternauta", "disponible": True, "veces_prestado": 0}
-    libros_db[103] = {"titulo": "El Principito", "disponible": True, "veces_prestado": 0}
-    libros_db[104] = {"titulo": "El Señor de los Anillos", "disponible": True, "veces_prestado": 0}
+    usuarios_db, libros_db, estadisticas_globales = cargar_archivos()
+
+    if not libros_db:
+        libros_db[101] = {"titulo": "La vida despues de la muerte", "disponible": True, "veces_prestado": 0}
+        libros_db[102] = {"titulo": "El Eternauta", "disponible": True, "veces_prestado": 0}
+        libros_db[103] = {"titulo": "El Principito", "disponible": True, "veces_prestado": 0}
+        libros_db[104] = {"titulo": "El Señor de los Anillos", "disponible": True, "veces_prestado": 0}
+
     while True:
         mostrar_menu()
-        opcion = input("Seleccione una opción (1-6): ")
+        opcion = input("Seleccione una opción (1-7): ")
         if opcion == '1':
             registrar_usuario(usuarios_db)
         elif opcion == '2':
@@ -156,9 +226,13 @@ def main():
         elif opcion == '6':
             mostrar_libros_disponibles(libros_db)
         elif opcion == '7':
+            guardar_archivos(usuarios_db, libros_db, estadisticas_globales)
+            print("Datos guardados correctamente.")
             print("Cerrando el sistema de biblioteca. ¡Hasta luego!")
             break
         else:
             print("[!] Opción inválida. Por favor, ingrese un número del 1 al 7.")
-if __name__ == "__main__":
+
+
+if _name_ == "_main_":
     main()
