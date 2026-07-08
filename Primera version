@@ -28,18 +28,26 @@ def registrar_usuario(usuarios):
 def registrar_libro(libros):
     try:
         id_libro = int(input("Ingrese el código único del libro: "))
+
+
         if id_libro in libros:
-            print("[!] Error: Ya existe un libro con ese código.")
-        else:
-            titulo = input("Ingrese el título del libro: ")
-            libros[id_libro] = {
-                "titulo": titulo,
-                "disponible": True,
-                "veces_prestado": 0
-            }
-            print(f"[✓] Libro '{titulo}' registrado con éxito.")
+            if not libros[id_libro]["disponible"]:
+                print("[!] Error: No se puede sobrescribir este libro porque está prestado actualmente.")
+                return
+            else:
+                print("[!] Error: Ya existe un libro con ese código.")
+                return
+
+        titulo = input("Ingrese el título del libro: ")
+        libros[id_libro] = {
+            "titulo": titulo,
+            "disponible": True,
+            "veces_prestado": 0
+        }
+        print(f"[✓] Libro '{titulo}' registrado con éxito.")
+
     except ValueError:
-        print("[!] Error: El código del libro debe ser numérico.")
+        print("[!] Error: El código del libro debe ser numérico.")  
 
 
 def pedir_prestado_un_libro(libros, usuarios, estadisticas):
