@@ -26,3 +26,7 @@ Tambien permite consultar estadisticas, como la cantidad total de prestamos real
 1. Abrir una terminal en la carpeta del proyecto.
 2. Seleccionar una opcion del menu ingresando un numero del 1 al 7.
 3. Seguir las instrucciones que muestra el sistema por consola.
+
+## Uso de inteligencia artificial
+
+Utilizamos la inteligencia artificial para agregar mas libros al catalogo de la biblioteca, tambien para revisar la estructura general del programa, proponer mejoras en la claridad de las funciones y archivos, y por ultimo para darle una mejor imagen a la terminal. Utilizamos gemini y copilot como ayuda en el proyecto.
