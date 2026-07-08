@@ -5,7 +5,7 @@
 ## Integrantes del grupo
 
 - Julio Gonzalo Ezequiel Aguirre
-- Benjamn Ezequiel MENDIBURU
+- Benjamín Ezequiel MENDIBURU
 - Jose Emilio SILVA
 - Luciano CASARRUBIA
 
