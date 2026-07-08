@@ -210,6 +210,17 @@ def main():
         libros_db[102] = {"titulo": "El Eternauta", "disponible": True, "veces_prestado": 0}
         libros_db[103] = {"titulo": "El Principito", "disponible": True, "veces_prestado": 0}
         libros_db[104] = {"titulo": "El Señor de los Anillos", "disponible": True, "veces_prestado": 0}
+        libros_db[105] = {"titulo": "Cien años de soledad", "disponible": True, "veces_prestado": 0}
+        libros_db[106] = {"titulo": "1984", "disponible": True, "veces_prestado": 0}
+        libros_db[107] = {"titulo": "El Hobbit", "disponible": True, "veces_prestado": 0}
+        libros_db[108] = {"titulo": "Rayuela", "disponible": True, "veces_prestado": 0}
+        libros_db[109] = {"titulo": "El Gran Gatsby", "disponible": True, "veces_prestado": 0}
+        libros_db[110] = {"titulo": "Crimen y castigo", "disponible": True, "veces_prestado": 0}
+        libros_db[111] = {"titulo": "Orgullo y prejuicio", "disponible": True, "veces_prestado": 0}
+        libros_db[112] = {"titulo": "El código Da Vinci", "disponible": True, "veces_prestado": 0}
+        libros_db[113] = {"titulo": "Harry Potter y la piedra filosofal", "disponible": True, "veces_prestado": 0}
+        libros_db[114] = {"titulo": "El alquimista", "disponible": True, "veces_prestado": 0}
+
 
     while True:
         mostrar_menu()
