@@ -136,10 +136,6 @@ def mostrar_estadisticas(libros, estadisticas):
     if not hay_libros:
         print(" No hay libros registrados en el sistema aún.")
 
-
-# ------------------ MANEJO DE ARCHIVOS TXT ------------------
-
-
 def guardar_archivos(usuarios, libros, estadisticas):
     # Guardar usuarios
     with open("usuarios.txt", "w") as f:
@@ -147,23 +143,21 @@ def guardar_archivos(usuarios, libros, estadisticas):
             linea = f"{id_u},{datos['nombre']},{'|'.join(map(str, datos['libros_actuales']))}\n"
             f.write(linea)
 
-    # Guardar libros
+
     with open("libros.txt", "w") as f:
         for id_l, datos in libros.items():
             linea = f"{id_l},{datos['titulo']},{datos['disponible']},{datos['veces_prestado']}\n"
             f.write(linea)
 
-    # Guardar estadísticas
+
     with open("estadisticas.txt", "w") as f:
         f.write(f"{estadisticas['total_prestamos']},{estadisticas['recaudacion_multas']}\n")
-
 
 def cargar_archivos():
     usuarios = {}
     libros = {}
     estadisticas = {"total_prestamos": 0, "recaudacion_multas": 0.0}
 
-    # Cargar usuarios
     try:
         with open("usuarios.txt", "r") as f:
             for linea in f:
@@ -176,7 +170,7 @@ def cargar_archivos():
     except FileNotFoundError:
         pass
 
-    # Cargar libros
+
     try:
         with open("libros.txt", "r") as f:
             for linea in f:
@@ -189,7 +183,6 @@ def cargar_archivos():
     except FileNotFoundError:
         pass
 
-    # Cargar estadísticas
     try:
         with open("estadisticas.txt", "r") as f:
             partes = f.readline().strip().split(",")
